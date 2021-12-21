@@ -5,7 +5,6 @@ import java.util.EnumMap;
 
 public class Character
 {
-
     private String name;
 
     public int armorClass;
@@ -22,17 +21,41 @@ public class Character
     
     public void setAttribute(DND.Attribute attr, int val)
     {
+        System.out.println("Setting attribute " + attr + " to " + val);
         attributes.put(attr, val);
     }
+
+    public boolean getProficiency(DND.Skill skill)
+    {
+        return skillProficiencies.get(skill);
+    }
     
+    public void setProficiency(DND.Skill skill, boolean condition)
+    {
+        System.out.println("Setting proficiency of " + skill + " to " + condition);
+        skillProficiencies.put(skill, condition);
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
     Character(String name)
     {
+        System.out.println("[" + name + "] Character constructor called");
+
         this.name = name;
-        
+
         for(DND.Attribute attr : DND.Attribute.values())
         {
             setAttribute(attr, 0);
-            System.out.println("Put 0 on " + attr);
         }
+
+        for(DND.Skill skill : DND.Skill.values())
+        {
+            setProficiency(skill, false);
+        }
+        System.out.println("[" + name + "] Character constructor finished");
     }
 }

@@ -6,7 +6,8 @@ package dnd;
 
 import dnd.DND.Attribute;
 
-public class Main {
+public class Main
+{
     public static void main(String[] args)
     {
         System.out.println("## Dungeons and Dragons Java Program");

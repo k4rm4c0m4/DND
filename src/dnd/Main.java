@@ -1,3 +1,7 @@
+/**
+ * (c) 2021 Simon Busch
+ */
+
 package dnd;
 
 import dnd.DND.Attribute;

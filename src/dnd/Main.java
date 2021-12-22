@@ -5,6 +5,7 @@
 package dnd;
 
 import dnd.DND.Attribute;
+import dnd.DND.Skill;
 
 public class Main
 {
@@ -12,7 +13,9 @@ public class Main
     {
         System.out.println("## Dungeons and Dragons Java Program");
         System.out.println("------------------------------------");
-        Character simon = new Character("Simon");
-        simon.setAttribute(Attribute.STRENGTH, 12);
+        PlayerCharacter simon = new PlayerCharacter("Simon");
+        simon.setAttribute(Attribute.STRENGTH, 8);
+        simon.setProficiency(Skill.ATHLETICS, false);
+        System.out.println(simon.getSkillValue(Skill.ATHLETICS));
     }
 }

@@ -1,4 +1,8 @@
-package dnd;
+/**
+ * (c) 2021 Simon Busch, Maurice Bonke & Mikail Yangin under the GNU General Purpose License v3.0
+ */
+
+ package dnd;
 
 import java.util.Map;
 import java.util.EnumMap;
@@ -27,6 +31,15 @@ public class PlayerCharacter extends Character
         _return = bonus + relevant_modifier;
 
         return _return;
+    }
+
+
+    public int skill_roll(DND.Skill skill)
+    {
+        int bonus = getSkillValue(skill);
+        int roll = DND.rollDX(20);
+
+        return roll + bonus;
     }
 
     /* Getter and setter functions */

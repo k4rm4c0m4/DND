@@ -18,7 +18,7 @@ public class Character
     public void setAttribute(DND.Attribute attribute, int value) { attributes.put(attribute, value); }
     public String getName() { return name; }
 
-    Character(String name)
+    public Character(String name)
     {
         this.name = name;
 

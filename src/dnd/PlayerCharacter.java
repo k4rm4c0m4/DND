@@ -8,7 +8,7 @@ public class PlayerCharacter extends Character
     private Map<DND.Skill, Boolean> skillProficiencies = new EnumMap<>(DND.Skill.class);
 
     /* functions */
-    int getSkillValue(DND.Skill skill)
+    public int getSkillValue(DND.Skill skill)
     {
         int _return = 0, attribute_value = 0, relevant_modifier = 0, bonus = 0;
         DND.Attribute skill_attribute;
@@ -32,7 +32,6 @@ public class PlayerCharacter extends Character
     /* Getter and setter functions */
     public boolean getProficiency(DND.Skill skill) { return skillProficiencies.get(skill); }
     public void setProficiency(DND.Skill skill, boolean condition) { skillProficiencies.put(skill, condition); }
-
 
     PlayerCharacter(String name)
     {

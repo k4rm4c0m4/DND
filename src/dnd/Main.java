@@ -16,6 +16,6 @@ public class Main
         PlayerCharacter simon = new PlayerCharacter("Simon");
         simon.setAttribute(Attribute.STRENGTH, 8);
         simon.setProficiency(Skill.ATHLETICS, false);
-        System.out.println(simon.getSkillValue(Skill.ATHLETICS));
+        int athletics_val = simon.getSkillValue(Skill.ATHLETICS);
     }
 }

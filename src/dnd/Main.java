@@ -13,10 +13,15 @@ public class Main
     {
         System.out.println("## Dungeons and Dragons Java Program");
         System.out.println("------------------------------------");
-        PlayerCharacter simon = new PlayerCharacter("Simon");
-        simon.setAttribute(Attribute.STRENGTH, 15);
-        simon.setProficiency(Skill.ATHLETICS, true);
-        int athletics_val = simon.getSkillValue(Skill.ATHLETICS);
-        System.out.println(athletics_val);
+        DND game = new DND("thisGame");
+        game.putPlayerCharacter(new PlayerCharacter("Simon"));
+        game.getPlayerByName("Simon").setAttribute(Attribute.STRENGTH, 15);
+        game.getPlayerByName("Simon").setProficiency(Skill.ATHLETICS, false);
+
+        int i = game.saveGameStateToFile();
+
+        DND deserialisedGameState = DND.loadGameStateFromFile("thisGame", i);
+        System.out.println(deserialisedGameState.getPlayerByName("Simon").getProficiency(Skill.ATHLETICS));
+        System.out.println(deserialisedGameState.getGameName());
     }
 }

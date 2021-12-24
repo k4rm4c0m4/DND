@@ -7,7 +7,7 @@ package dnd;
 import java.util.Map;
 import java.util.EnumMap;
 
-public class Character
+public class Character implements java.io.Serializable
 {
     private String name;
 

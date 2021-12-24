@@ -1,3 +1,7 @@
+/**
+ * (c) 2021 Simon Busch, Maurice Bonke & Mikail Yangin under the GNU General Purpose License v3.0
+ */
+
 package dnd;
 
 import java.util.Map;
@@ -10,8 +14,11 @@ public class Character
     public int armorClass;
     public int hitPoints;
     public int speed;
-    
+
     private Map<DND.Attribute, Integer> attributes = new EnumMap<>(DND.Attribute.class);
+
+    /* functions */
+
 
     /* getter and setter function */
     public int getAttribute(DND.Attribute attribute) { return attributes.get(attribute); }

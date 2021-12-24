@@ -1,14 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * (c) 2021 Simon Busch, Maurice Bonke & Mikail Yangin under the GNU General Purpose License v3.0
  */
 
 package dnd;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class DND
 {
@@ -43,7 +42,7 @@ public class DND
         STEALTH,
         SURVIVAL
     }
-    
+
     Map<String, NonPlayerCharacter> monsters = new HashMap<>();
     Map<String, PlayerCharacter> players = new HashMap<>();
     private static Map<Skill, Attribute> skillAttributeMap;
@@ -70,6 +69,13 @@ public class DND
         skillAttributeMap.put(Skill.SLEIGHT_OF_HAND, Attribute.DEXTERITY);
         skillAttributeMap.put(Skill.STEALTH, Attribute.DEXTERITY);
         skillAttributeMap.put(Skill.SURVIVAL, Attribute.WISDOM);
+    }
+
+    /* functions */
+    public static int rollDX(int x)
+    {
+        Random random = new Random();
+        return random.nextInt(x) + 1;
     }
 
     public static Attribute getSkillAttribute(Skill skill)

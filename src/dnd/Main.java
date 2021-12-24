@@ -1,5 +1,5 @@
 /**
- * (c) 2021 Simon Busch
+ * (c) 2021 Simon Busch, Maurice Bonke & Mikail Yangin under the GNU General Purpose License v3.0
  */
 
 package dnd;
@@ -14,7 +14,7 @@ public class Main
         System.out.println("## Dungeons and Dragons Java Program");
         System.out.println("------------------------------------");
         PlayerCharacter simon = new PlayerCharacter("Simon");
-        simon.setAttribute(Attribute.STRENGTH, 8);
+        simon.setAttribute(Attribute.STRENGTH, 15);
         simon.setProficiency(Skill.ATHLETICS, false);
         int athletics_val = simon.getSkillValue(Skill.ATHLETICS);
     }

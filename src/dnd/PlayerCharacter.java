@@ -46,7 +46,7 @@ public class PlayerCharacter extends Character
     public boolean getProficiency(DND.Skill skill) { return skillProficiencies.get(skill); }
     public void setProficiency(DND.Skill skill, boolean condition) { skillProficiencies.put(skill, condition); }
 
-    PlayerCharacter(String name)
+    public PlayerCharacter(String name)
     {
         super(name);
 

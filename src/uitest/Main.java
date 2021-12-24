@@ -1,15 +1,14 @@
 package uitest;
 
 import dnd.*;
-import dnd.Character;
 
 class Main
 {
-    public static void main(String args)
+    public static void main(String[] args)
     {
         PlayerCharacter simon = new PlayerCharacter("Simon");
-        simon.setAttribute(DND.Attribute.INTELLIGENCE, 10);
+        simon.setAttribute(DND.Attribute.WISDOM, 20);
         simon.setProficiency(DND.Skill.PERCEPTION, true);
-        simon.getSkillValue(DND.Skill.PERCEPTION);
+        System.out.println(simon.skill_roll(DND.Skill.PERCEPTION));
     }
 }

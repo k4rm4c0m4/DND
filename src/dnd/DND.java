@@ -4,6 +4,9 @@
 
 package dnd;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,7 +115,6 @@ public class DND implements java.io.Serializable
         return saveid;
     }
 
-    /* not adjusted to new saveGameStateToFile function */
     public static DND loadGameStateFromFile(String gameName, Integer saveid)
     {
         String userHome = System.getProperty("user.home");
@@ -140,8 +142,92 @@ public class DND implements java.io.Serializable
     /* not implemented */
     public static DND loadGameStateFromFile(String gameName)
     {
-        return null;
+        System.out.println("Choosing newest save from " + gameName);
+
+        String userHome = System.getProperty("user.home");
+        String dir = userHome + "/Documents/DND/" + gameName + "/";
+        DND gamestate = null;
+
+        //Creating a File object for directory
+        File directoryPath = new File(dir);
+
+        if(!directoryPath.isDirectory())
+        {
+            System.err.println(directoryPath.getAbsolutePath() + "/ is not a directory.");
+            return null;
+        }
+
+        //List of all files and directories
+        List<String> fileNameList = Arrays.asList(directoryPath.list());
+        Collections.sort(fileNameList);
+
+        if(fileNameList.size() < 1)
+        {
+            System.err.println("No save found.");
+            return null;
+        }
+
+        System.out.println("Sorted list of saves of " + gameName);
+        for(String fileName : fileNameList)
+        {
+            System.out.println("  " + fileName);
+        }
+        System.out.println("----");
+        String newestSave = fileNameList.get(fileNameList.size() - 1);
+        try {
+            FileInputStream fileIn = new FileInputStream(dir + newestSave);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            gamestate = (DND) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("No file found");
+            c.printStackTrace();
+        }
+
+        return gamestate;
     }
+
+    public static void deleteGameStates(String gameName)
+    {
+
+        String userHome = System.getProperty("user.home");
+        String dir = userHome + "/Documents/DND/" + gameName + "/";
+        System.out.println("WARNING: Deleting directory " + dir);
+
+        // creating a File object for directory
+        File directoryPath = new File(dir);
+
+        // guard clause that returns if directory path is not a directory
+        if(!directoryPath.isDirectory())
+        {
+            System.out.println("Error: '" + dir + "' is not a directory.");
+            return;
+        }
+
+        deleteDirectory(directoryPath);
+    }
+
+    // function to delete subdirectories and files
+    private static void deleteDirectory(File file)
+    {
+        // store all the paths of files and folders present
+        // inside directory
+        for (File subfile : file.listFiles()) {
+  
+            // if it is a subfolder,e.g Rohan and Ritik,
+            // recursiley call function to empty subfolder
+            if (subfile.isDirectory()) {
+                deleteDirectory(subfile);
+            }
+  
+            // delete files and empty subfolders
+            subfile.delete();
+        }
+    }
+
 
     /* Getter and setter functions */
     public String getGameName()
@@ -179,5 +265,6 @@ public class DND implements java.io.Serializable
     {
         saveid = 0;
         this.gameName = gameName;
+        saveGameStateToFile();
     }
 }

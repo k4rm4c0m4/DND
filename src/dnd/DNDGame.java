@@ -14,7 +14,7 @@ import java.util.Random;
 
 import java.io.*;
 
-public class DND implements java.io.Serializable
+public class DNDGame implements java.io.Serializable
 {
     public enum Attribute
     {
@@ -90,7 +90,7 @@ public class DND implements java.io.Serializable
     public Integer saveGameStateToFile()
     {
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DND/" + gameName + "/";
+        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
 
         File dirpath = new File(dir);
 
@@ -115,16 +115,16 @@ public class DND implements java.io.Serializable
         return saveid;
     }
 
-    public static DND loadGameStateFromFile(String gameName, Integer saveid)
+    public static DNDGame loadGameStateFromFile(String gameName, Integer saveid)
     {
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DND/" + gameName + "/";
-        DND gamestate = null;
+        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        DNDGame gamestate = null;
 
         try {
             FileInputStream fileIn = new FileInputStream(dir + saveid.toString() + ".dndstate");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            gamestate = (DND) in.readObject();
+            gamestate = (DNDGame) in.readObject();
             in.close();
             fileIn.close();
         } catch (IOException i) {
@@ -139,14 +139,13 @@ public class DND implements java.io.Serializable
         return gamestate;
     }
 
-    /* not implemented */
-    public static DND loadGameStateFromFile(String gameName)
+    public static DNDGame loadGameStateFromFile(String gameName)
     {
         System.out.println("Choosing newest save from " + gameName);
 
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DND/" + gameName + "/";
-        DND gamestate = null;
+        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        DNDGame gamestate = null;
 
         //Creating a File object for directory
         File directoryPath = new File(dir);
@@ -177,7 +176,7 @@ public class DND implements java.io.Serializable
         try {
             FileInputStream fileIn = new FileInputStream(dir + newestSave);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            gamestate = (DND) in.readObject();
+            gamestate = (DNDGame) in.readObject();
             in.close();
             fileIn.close();
         } catch (IOException i) {
@@ -194,7 +193,7 @@ public class DND implements java.io.Serializable
     {
 
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DND/" + gameName + "/";
+        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
         System.out.println("WARNING: Deleting directory " + dir);
 
         // creating a File object for directory
@@ -261,7 +260,7 @@ public class DND implements java.io.Serializable
     }
 
     /* Constructor */
-    DND(String gameName)
+    DNDGame(String gameName)
     {
         saveid = 0;
         this.gameName = gameName;

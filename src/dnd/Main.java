@@ -8,6 +8,6 @@ public class Main
 {
     public static void main(String[] args)
     {
-        System.out.println(DND.getSkillAttribute(DND.Skill.ACROBATICS));
+        System.out.println(DNDGame.getSkillAttribute(DNDGame.Skill.ACROBATICS));
     }
 }

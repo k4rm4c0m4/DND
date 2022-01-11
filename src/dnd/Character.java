@@ -15,21 +15,21 @@ public class Character implements java.io.Serializable
     public int hitPoints;
     public int speed;
 
-    private Map<DND.Attribute, Integer> attributes = new EnumMap<>(DND.Attribute.class);
+    private Map<DNDGame.Attribute, Integer> attributes = new EnumMap<>(DNDGame.Attribute.class);
 
     /* functions */
 
 
     /* getter and setter function */
-    public int getAttribute(DND.Attribute attribute) { return attributes.get(attribute); }
-    public void setAttribute(DND.Attribute attribute, int value) { attributes.put(attribute, value); }
+    public int getAttribute(DNDGame.Attribute attribute) { return attributes.get(attribute); }
+    public void setAttribute(DNDGame.Attribute attribute, int value) { attributes.put(attribute, value); }
     public String getName() { return name; }
 
     public Character(String name)
     {
         this.name = name;
 
-        for(DND.Attribute attribute : DND.Attribute.values())
+        for(DNDGame.Attribute attribute : DNDGame.Attribute.values())
         {
             setAttribute(attribute, 0);
         }

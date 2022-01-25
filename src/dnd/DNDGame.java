@@ -20,7 +20,7 @@ public class DNDGame implements java.io.Serializable
     {
         STRENGTH,
         DEXTERITY,
-        CONSTUTIUTION,
+        CONSTITUTION,
         INTELLIGENCE,
         WISDOM,
         CHARISMA,
@@ -48,49 +48,70 @@ public class DNDGame implements java.io.Serializable
         SURVIVAL
     }
 
+    public enum Alignment
+    {
+        LAWFUL_GOOD,
+        NEUTRAL_GOOD,
+        CHAOTIC_GOOD,
+        LAWFUL_NEUTRAL,
+        TRUE_NEUTRAL,
+        CHAOTIC_NEUTRAL,
+        LAWFUL_EVIL,
+        NEUTRAL_EVIL,
+        CHAOTIC_EVIL
+    }
+
     private String gameName;
+    public void setGameName(String gameName) { this.gameName = gameName; }
     private Integer saveid;
 
-    private Map<String, NonPlayerCharacter> npcs = new HashMap<>();
-    private Map<String, PlayerCharacter> players = new HashMap<>();
-    private static Map<Skill, Attribute> skillAttributeMap;
+    private Map<String, NonPlayerCharacter> non_playser_characters = new HashMap<>();
+    private Map<String, PlayerCharacter> player_characters = new HashMap<>();
+
+    private static Map<Skill, Attribute> skill_attributes_map = new EnumMap<>(Skill.class);
 
     /* Mapping of all skill enums to their attribute enum */
     static
     {
-        skillAttributeMap = new EnumMap<>(Skill.class);
-        skillAttributeMap.put(Skill.ACROBATICS, Attribute.DEXTERITY);
-        skillAttributeMap.put(Skill.ANIMAL_HANDLING, Attribute.WISDOM);
-        skillAttributeMap.put(Skill.ARCANA, Attribute.INTELLIGENCE);
-        skillAttributeMap.put(Skill.ATHLETICS, Attribute.STRENGTH);
-        skillAttributeMap.put(Skill.DECEPTION, Attribute.CHARISMA);
-        skillAttributeMap.put(Skill.HISTORY, Attribute.INTELLIGENCE);
-        skillAttributeMap.put(Skill.INSIGHT, Attribute.WISDOM);
-        skillAttributeMap.put(Skill.INTIMIDATION, Attribute.CHARISMA);
-        skillAttributeMap.put(Skill.INVESTIGATION, Attribute.INTELLIGENCE);
-        skillAttributeMap.put(Skill.MEDICINE, Attribute.WISDOM);
-        skillAttributeMap.put(Skill.NATURE, Attribute.INTELLIGENCE);
-        skillAttributeMap.put(Skill.PERCEPTION, Attribute.WISDOM);
-        skillAttributeMap.put(Skill.PERFORMANCE, Attribute.CHARISMA);
-        skillAttributeMap.put(Skill.PERSUASION, Attribute.CHARISMA);
-        skillAttributeMap.put(Skill.RELIGION, Attribute.INTELLIGENCE);
-        skillAttributeMap.put(Skill.SLEIGHT_OF_HAND, Attribute.DEXTERITY);
-        skillAttributeMap.put(Skill.STEALTH, Attribute.DEXTERITY);
-        skillAttributeMap.put(Skill.SURVIVAL, Attribute.WISDOM);
+        skill_attributes_map.put(Skill.ACROBATICS, Attribute.DEXTERITY);
+        skill_attributes_map.put(Skill.ANIMAL_HANDLING, Attribute.WISDOM);
+        skill_attributes_map.put(Skill.ARCANA, Attribute.INTELLIGENCE);
+        skill_attributes_map.put(Skill.ATHLETICS, Attribute.STRENGTH);
+        skill_attributes_map.put(Skill.DECEPTION, Attribute.CHARISMA);
+        skill_attributes_map.put(Skill.HISTORY, Attribute.INTELLIGENCE);
+        skill_attributes_map.put(Skill.INSIGHT, Attribute.WISDOM);
+        skill_attributes_map.put(Skill.INTIMIDATION, Attribute.CHARISMA);
+        skill_attributes_map.put(Skill.INVESTIGATION, Attribute.INTELLIGENCE);
+        skill_attributes_map.put(Skill.MEDICINE, Attribute.WISDOM);
+        skill_attributes_map.put(Skill.NATURE, Attribute.INTELLIGENCE);
+        skill_attributes_map.put(Skill.PERCEPTION, Attribute.WISDOM);
+        skill_attributes_map.put(Skill.PERFORMANCE, Attribute.CHARISMA);
+        skill_attributes_map.put(Skill.PERSUASION, Attribute.CHARISMA);
+        skill_attributes_map.put(Skill.RELIGION, Attribute.INTELLIGENCE);
+        skill_attributes_map.put(Skill.SLEIGHT_OF_HAND, Attribute.DEXTERITY);
+        skill_attributes_map.put(Skill.STEALTH, Attribute.DEXTERITY);
+        skill_attributes_map.put(Skill.SURVIVAL, Attribute.WISDOM);
     }
 
     /* functions */
-    public static int rollDX(int x)
+    public static int roll_dice(int sides, int dice)
     {
         Random random = new Random();
-        return random.nextInt(x) + 1;
+        int _return = 0;
+
+        for(int i = 0; i < dice; i++)
+        {
+            _return *= random.nextInt(sides) + 1;
+        }
+
+        return _return;
     }
 
 
     public Integer saveGameStateToFile()
     {
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
 
         File dirpath = new File(dir);
 
@@ -118,7 +139,7 @@ public class DNDGame implements java.io.Serializable
     public static DNDGame loadGameStateFromFile(String gameName, Integer saveid)
     {
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
         DNDGame gamestate = null;
 
         try {
@@ -144,7 +165,7 @@ public class DNDGame implements java.io.Serializable
         System.out.println("Choosing newest save from " + gameName);
 
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
         DNDGame gamestate = null;
 
         //Creating a File object for directory
@@ -193,7 +214,7 @@ public class DNDGame implements java.io.Serializable
     {
 
         String userHome = System.getProperty("user.home");
-        String dir = userHome + "/Documents/DNDGame/" + gameName + "/";
+        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
         System.out.println("WARNING: Deleting directory " + dir);
 
         // creating a File object for directory
@@ -209,7 +230,9 @@ public class DNDGame implements java.io.Serializable
         deleteDirectory(directoryPath);
     }
 
-    // function to delete subdirectories and files
+    /** function to delete subdirectories and files.
+     *  DANGEROUS! Never use except when necessary.
+     */
     private static void deleteDirectory(File file)
     {
         // store all the paths of files and folders present
@@ -236,27 +259,27 @@ public class DNDGame implements java.io.Serializable
 
     public NonPlayerCharacter getNpcByName(String name)
     {
-        return npcs.get(name);
+        return non_playser_characters.get(name);
     }
 
     public PlayerCharacter getPlayerByName(String name)
     {
-        return players.get(name);
+        return player_characters.get(name);
     }
 
     public void putPlayerCharacter(PlayerCharacter pc)
     {
-        players.put(pc.getName(), pc);
+        player_characters.put(pc.getName(), pc);
     }
 
     public void putNonPlayerCharacter(NonPlayerCharacter pc)
     {
-        npcs.put(pc.getName(), pc);
+        non_playser_characters.put(pc.getName(), pc);
     }
 
     public static Attribute getSkillAttribute(Skill skill)
     {
-        return skillAttributeMap.get(skill);
+        return skill_attributes_map.get(skill);
     }
 
     /* Constructor */

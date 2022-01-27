@@ -4,9 +4,8 @@
 
 package dnd;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +15,7 @@ import java.io.*;
 
 public class DNDGame implements java.io.Serializable
 {
+    /* Attribute enumeration denotes the different attributes a character has have. */
     public enum Attribute
     {
         STRENGTH,
@@ -26,6 +26,7 @@ public class DNDGame implements java.io.Serializable
         CHARISMA,
     };
     
+    /* Skill enumeration denotes the different skills a player character has. */
     public enum Skill
     {
         ACROBATICS,
@@ -48,6 +49,7 @@ public class DNDGame implements java.io.Serializable
         SURVIVAL
     }
 
+    /* Alignment enumeration denotes the different alignments a player character can have. */
     public enum Alignment
     {
         LAWFUL_GOOD,
@@ -61,232 +63,131 @@ public class DNDGame implements java.io.Serializable
         CHAOTIC_EVIL
     }
 
+    /* Name of the game and getter/setter */
     private String gameName;
-    public void setGameName(String gameName) { this.gameName = gameName; }
-    private Integer saveid;
+        public String getGameName()
+            { return gameName; }
+        public void setGameName(String gameName)
+            { this.gameName = gameName; }
 
-    private Map<String, NonPlayerCharacter> non_playser_characters = new HashMap<>();
-    private Map<String, PlayerCharacter> player_characters = new HashMap<>();
+    /* The id of this save */
+    private int saveId;
+        public int getSaveId()
+            { return saveId; }
 
-    private static Map<Skill, Attribute> skill_attributes_map = new EnumMap<>(Skill.class);
+    /* A hashmap of all non player characters */
+    private Map<String, NonPlayerCharacter> nonPlayerCharacters = new HashMap<>();
+        public NonPlayerCharacter getNpcByName(String name)
+            { return nonPlayerCharacters.get(name); }
+        public void putNonPlayerCharacter(NonPlayerCharacter pc)
+            { nonPlayerCharacters.put(pc.getName(), pc); }
+        public void removeNonPlayerCharacterThroughName(String name)
+            { nonPlayerCharacters.remove(name); }
+        public List<PlayerCharacter> nonPlayerCharacterMapAsList()
+            { return new ArrayList<PlayerCharacter>(playerCharacters.values()); }
+        
+        
+    /* A hashmap of all player characters */
+    private Map<String, PlayerCharacter> playerCharacters = new HashMap<>();
+        public PlayerCharacter getPlayerByName(String name)
+            { return playerCharacters.get(name); }
+        public void putPlayerCharacter(PlayerCharacter pc)
+            { playerCharacters.put(pc.getName(), pc); }
+        public void removePlayerCharacterThroughName(String name)
+            { playerCharacters.remove(name); }
+        public List<PlayerCharacter> playerCharacterMapAsList()
+            { return new ArrayList<PlayerCharacter>(playerCharacters.values()); }
 
-    /* Mapping of all skill enums to their attribute enum */
-    static
-    {
-        skill_attributes_map.put(Skill.ACROBATICS, Attribute.DEXTERITY);
-        skill_attributes_map.put(Skill.ANIMAL_HANDLING, Attribute.WISDOM);
-        skill_attributes_map.put(Skill.ARCANA, Attribute.INTELLIGENCE);
-        skill_attributes_map.put(Skill.ATHLETICS, Attribute.STRENGTH);
-        skill_attributes_map.put(Skill.DECEPTION, Attribute.CHARISMA);
-        skill_attributes_map.put(Skill.HISTORY, Attribute.INTELLIGENCE);
-        skill_attributes_map.put(Skill.INSIGHT, Attribute.WISDOM);
-        skill_attributes_map.put(Skill.INTIMIDATION, Attribute.CHARISMA);
-        skill_attributes_map.put(Skill.INVESTIGATION, Attribute.INTELLIGENCE);
-        skill_attributes_map.put(Skill.MEDICINE, Attribute.WISDOM);
-        skill_attributes_map.put(Skill.NATURE, Attribute.INTELLIGENCE);
-        skill_attributes_map.put(Skill.PERCEPTION, Attribute.WISDOM);
-        skill_attributes_map.put(Skill.PERFORMANCE, Attribute.CHARISMA);
-        skill_attributes_map.put(Skill.PERSUASION, Attribute.CHARISMA);
-        skill_attributes_map.put(Skill.RELIGION, Attribute.INTELLIGENCE);
-        skill_attributes_map.put(Skill.SLEIGHT_OF_HAND, Attribute.DEXTERITY);
-        skill_attributes_map.put(Skill.STEALTH, Attribute.DEXTERITY);
-        skill_attributes_map.put(Skill.SURVIVAL, Attribute.WISDOM);
-    }
+    /* A map of all skills to their respective attributes */
+    private static Map<Skill, Attribute> skillAttributesMap = new EnumMap<>(Skill.class);
+        public static Attribute getSkillAttribute(Skill skill)
+            { return skillAttributesMap.get(skill); }
+        static
+        {
+            skillAttributesMap.put(Skill.ACROBATICS, Attribute.DEXTERITY);
+            skillAttributesMap.put(Skill.ANIMAL_HANDLING, Attribute.WISDOM);
+            skillAttributesMap.put(Skill.ARCANA, Attribute.INTELLIGENCE);
+            skillAttributesMap.put(Skill.ATHLETICS, Attribute.STRENGTH);
+            skillAttributesMap.put(Skill.DECEPTION, Attribute.CHARISMA);
+            skillAttributesMap.put(Skill.HISTORY, Attribute.INTELLIGENCE);
+            skillAttributesMap.put(Skill.INSIGHT, Attribute.WISDOM);
+            skillAttributesMap.put(Skill.INTIMIDATION, Attribute.CHARISMA);
+            skillAttributesMap.put(Skill.INVESTIGATION, Attribute.INTELLIGENCE);
+            skillAttributesMap.put(Skill.MEDICINE, Attribute.WISDOM);
+            skillAttributesMap.put(Skill.NATURE, Attribute.INTELLIGENCE);
+            skillAttributesMap.put(Skill.PERCEPTION, Attribute.WISDOM);
+            skillAttributesMap.put(Skill.PERFORMANCE, Attribute.CHARISMA);
+            skillAttributesMap.put(Skill.PERSUASION, Attribute.CHARISMA);
+            skillAttributesMap.put(Skill.RELIGION, Attribute.INTELLIGENCE);
+            skillAttributesMap.put(Skill.SLEIGHT_OF_HAND, Attribute.DEXTERITY);
+            skillAttributesMap.put(Skill.STEALTH, Attribute.DEXTERITY);
+            skillAttributesMap.put(Skill.SURVIVAL, Attribute.WISDOM);
+        }
 
-    /* functions */
-    public static int roll_dice(int sides, int dice)
+    /* Function that returns the sum of 'dice' amounts of ((randoms with the upperbound 'sides') + 1) */
+    public static int rollDice(int sides, int dice)
     {
         Random random = new Random();
         int _return = 0;
 
         for(int i = 0; i < dice; i++)
         {
-            _return *= random.nextInt(sides) + 1;
+            _return += random.nextInt(sides) + 1;
         }
 
         return _return;
     }
 
-
-    public Integer saveGameStateToFile()
+    /* Saves game state to file */
+    public Integer saveGameStateToFile(String dir)
     {
-        String userHome = System.getProperty("user.home");
-        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
+        saveId++;
 
-        File dirpath = new File(dir);
-
-        if(!dirpath.isDirectory() && !dirpath.exists())
-        {
-            dirpath.mkdir();
-        }
-
-        saveid++;
-        
         try {
-           FileOutputStream fileOut = new FileOutputStream(dir + saveid.toString() + ".dndstate");
-           ObjectOutputStream out = new ObjectOutputStream(fileOut);
-           out.writeObject(this);
-           out.close();
-           fileOut.close();
-           System.out.println("Gamestate saved in " + dir + saveid.toString() + ".dndstate");
-        } catch (IOException i) {
-           i.printStackTrace();
+            FileOutputStream fileOut = new FileOutputStream(dir);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this);
+            out.close();
+            fileOut.close();
+            System.out.println("Gamestate was saved in \'" + dir + "\'.");
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+            System.out.println("Could not save gamestate in \'" + dir + "\'. Refer to stack trace above.");
         }
 
-        return saveid;
+        return saveId;
     }
 
-    public static DNDGame loadGameStateFromFile(String gameName, Integer saveid)
+    /* Loaf game state from file */
+    public static DNDGame loadGameStateFromFile(String dir)
     {
-        String userHome = System.getProperty("user.home");
-        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
-        DNDGame gamestate = null;
+        DNDGame _return;
 
         try {
-            FileInputStream fileIn = new FileInputStream(dir + saveid.toString() + ".dndstate");
+            FileInputStream fileIn = new FileInputStream(dir);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            gamestate = (DNDGame) in.readObject();
+            _return = (DNDGame) in.readObject();
             in.close();
             fileIn.close();
         } catch (IOException i) {
             i.printStackTrace();
-            return null;
+            System.out.println("Could not load gamestate from \'" + dir + "\'. Refer to stack trace above.");
+            _return = null;
         } catch (ClassNotFoundException c) {
-            System.out.println("File not found");
             c.printStackTrace();
-            return null;
+            System.out.println("Could not load gamestate from \'" + dir + "\': Class not found exception. Refer to stack trace above.");
+            _return = null;
         }
 
-        return gamestate;
-    }
-
-    public static DNDGame loadGameStateFromFile(String gameName)
-    {
-        System.out.println("Choosing newest save from " + gameName);
-
-        String userHome = System.getProperty("user.home");
-        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
-        DNDGame gamestate = null;
-
-        //Creating a File object for directory
-        File directoryPath = new File(dir);
-
-        if(!directoryPath.isDirectory())
-        {
-            System.err.println(directoryPath.getAbsolutePath() + "/ is not a directory.");
-            return null;
-        }
-
-        //List of all files and directories
-        List<String> fileNameList = Arrays.asList(directoryPath.list());
-        Collections.sort(fileNameList);
-
-        if(fileNameList.size() < 1)
-        {
-            System.err.println("No save found.");
-            return null;
-        }
-
-        System.out.println("Sorted list of saves of " + gameName);
-        for(String fileName : fileNameList)
-        {
-            System.out.println("  " + fileName);
-        }
-        System.out.println("----");
-        String newestSave = fileNameList.get(fileNameList.size() - 1);
-        try {
-            FileInputStream fileIn = new FileInputStream(dir + newestSave);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            gamestate = (DNDGame) in.readObject();
-            in.close();
-            fileIn.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        } catch (ClassNotFoundException c) {
-            System.out.println("No file found");
-            c.printStackTrace();
-        }
-
-        return gamestate;
-    }
-
-    public static void deleteGameStates(String gameName)
-    {
-
-        String userHome = System.getProperty("user.home");
-        String dir = userHome + "/documents/DNDGame/" + gameName + "/";
-        System.out.println("WARNING: Deleting directory " + dir);
-
-        // creating a File object for directory
-        File directoryPath = new File(dir);
-
-        // guard clause that returns if directory path is not a directory
-        if(!directoryPath.isDirectory())
-        {
-            System.out.println("Error: '" + dir + "' is not a directory.");
-            return;
-        }
-
-        deleteDirectory(directoryPath);
-    }
-
-    /** function to delete subdirectories and files.
-     *  DANGEROUS! Never use except when necessary.
-     */
-    private static void deleteDirectory(File file)
-    {
-        // store all the paths of files and folders present
-        // inside directory
-        for (File subfile : file.listFiles()) {
-  
-            // if it is a subfolder,e.g Rohan and Ritik,
-            // recursiley call function to empty subfolder
-            if (subfile.isDirectory()) {
-                deleteDirectory(subfile);
-            }
-  
-            // delete files and empty subfolders
-            subfile.delete();
-        }
-    }
-
-
-    /* Getter and setter functions */
-    public String getGameName()
-    { 
-        return gameName;
-    }
-
-    public NonPlayerCharacter getNpcByName(String name)
-    {
-        return non_playser_characters.get(name);
-    }
-
-    public PlayerCharacter getPlayerByName(String name)
-    {
-        return player_characters.get(name);
-    }
-
-    public void putPlayerCharacter(PlayerCharacter pc)
-    {
-        player_characters.put(pc.getName(), pc);
-    }
-
-    public void putNonPlayerCharacter(NonPlayerCharacter pc)
-    {
-        non_playser_characters.put(pc.getName(), pc);
-    }
-
-    public static Attribute getSkillAttribute(Skill skill)
-    {
-        return skill_attributes_map.get(skill);
+        return _return;
     }
 
     /* Constructor */
     DNDGame(String gameName)
     {
-        saveid = 0;
+        saveId = 0;
         this.gameName = gameName;
-        saveGameStateToFile();
     }
 }

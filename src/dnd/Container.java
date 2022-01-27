@@ -6,79 +6,75 @@ import java.util.List;
 
 public class Container implements Serializable
 {
-    List<Item> items = new ArrayList<>();
 
     int maxSlots;
+        public int getMaxSlots()
+            { return maxSlots; }
+        public void setMaxSlots(int maxSlots)
+            { this.maxSlots = maxSlots; }
     int slots;    
+        public int getSlots()
+            { return slots; }
 
-    public int get_max_slots() { return maxSlots; }
-    public int get_slots() { return slots; }
-
-    public int addItem(Item item)
-    {
-        int newslots = slots + item.getSlots();
-
-        if(newslots > maxSlots && !(maxSlots < 0))
+    List<Item> items = new ArrayList<>();
+        public List<Item> getItems()
+            { return items; }
+        public int getItemsSize()
+            { return items.size(); }
+        public Item getItemByIndex(int index)
+            { return items.get(index); }
+        public int addItem(Item item)
         {
-            System.out.println("ERROR: Did not add item " + item.getName() + " to container. No slots available.");
-        }
-        else
-        {
-            items.add(item);
-            slots = newslots;
-        }
-
-        return slots;
-    }
-
-    public List<Item> getItems() { return items; }
-    public int getItemsSize() { return items.size(); }
-    public Item getItemByIndex(int index) { return items.get(index); }
-
-    public Item getItemByName(String itemname)
-    {
-        for(int i = 0; i < items.size(); i++)
-        {
-            if(items.get(i).getName() == itemname)
+            int newslots = slots + item.getSlots();
+            if(newslots > maxSlots &! (maxSlots < 0))
             {
-                return items.get(i);
+                System.out.println("ERROR: Did not add item " + item.getName() + " to container. No slots available.");
             }
             else
             {
-                System.err.println("ERROR: Could not retrieve item with name " + itemname + ". Returned null.");
+                items.add(item);
+                slots = newslots;
             }
-
+            return slots;
         }
-
-        return null;
-    }
-
-    public Item removeItemByIndex(int index)
-    {
-        Item item = items.get(index);
-        items.remove(index);
-        return item;
-    }
-
-    public Item removeItemByName(String itemname)
-    {
-        Item item = null;
-
-        for(int i = 0; i < items.size(); i++)
+        public Item getItemByName(String itemname)
         {
-            if(items.get(i).getName() == itemname)
+            for(int i = 0; i < items.size(); i++)
             {
-                item = items.get(i);
-                items.remove(i);
+                if(items.get(i).getName() == itemname)
+                {
+                    return items.get(i);
+                }
+                else
+                {
+                    System.err.println("ERROR: Could not retrieve item with name " + itemname + ". Returned null.");
+                }
             }
-            else
-            {
-                System.err.println("ERROR: Could not remove item with name " + itemname + ". Returned null.");
-            }
+            return null;
         }
-
-        return item;
-    }
+        public Item removeItemByIndex(int index)
+        {
+            Item item = items.get(index);
+            items.remove(index);
+            return item;
+        }
+        public Item removeItemByName(String itemname)
+        {
+            Item item = null;
+            for(int i = 0; i < items.size(); i++)
+            {
+                if(items.get(i).getName() == itemname)
+                {
+                    item = items.get(i);
+                    items.remove(i);
+                }
+                else
+                {
+                    System.err.println("ERROR: Could not remove item with name " + itemname + ". Returned null.");
+                }
+            }
+            return item;
+        }
 
     Container(int maxSlots) { this.maxSlots = maxSlots; }
 }

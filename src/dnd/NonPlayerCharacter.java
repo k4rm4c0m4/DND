@@ -1,21 +1,28 @@
 package dnd;
 
+import java.util.Map;
 import java.util.EnumMap;
 
 public class NonPlayerCharacter extends Character
 {
-    private EnumMap<DNDGame.Attribute, Integer> saving_throw_bonus_map = new EnumMap<>(DNDGame.Attribute.class);
-    public void setSavingThrowBonus(DNDGame.Attribute at, Integer val) { saving_throw_bonus_map.put(at, val); }
-    public Integer getSavingThrowBonus(DNDGame.Attribute at) { return saving_throw_bonus_map.get(at); }
-
-    public int rollSavingThrow(DNDGame.Attribute at)
-    {
-        int roll = DNDGame.roll_dice(20, 1);
-        return roll + saving_throw_bonus_map.get(at);
-    }
+    private Map<DNDGame.Attribute, Integer> savingThrowBonusMap = new EnumMap<>(DNDGame.Attribute.class);
+        public void setSavingThrowBonus(DNDGame.Attribute attribute, Integer val)
+            { savingThrowBonusMap.put(attribute, val); }
+        public Integer getSavingThrowBonus(DNDGame.Attribute attribute)
+            { return savingThrowBonusMap.get(attribute); }
+        public int rollSavingThrow(DNDGame.Attribute attribute)
+        {
+            int roll = DNDGame.rollDice(20, 1);
+            return roll + savingThrowBonusMap.get(attribute);
+        }
 
     NonPlayerCharacter(String name, int handcount)
     {
         super(name, handcount);
+
+        for(DNDGame.Attribute attribute : DNDGame.Attribute.values())
+        {
+            setSavingThrowBonus(attribute, 0);
+        }
     }
 }
